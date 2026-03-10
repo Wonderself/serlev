@@ -124,7 +124,7 @@ export default function Eventos() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="https://wa.me/3300000000?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os%20de%20eventos%20da%20Ser%20Levemente!"
+              href="https://wa.me/5527999999999?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os%20de%20eventos%20da%20Ser%20Levemente!"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-primary-dark text-cream px-8 py-3 rounded-full text-sm tracking-wide hover:bg-primary transition-colors"

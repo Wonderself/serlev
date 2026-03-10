@@ -287,7 +287,12 @@ export default function HomeV2() {
               "ser.levemente_1543222645_1921013244313337774_6683801803_5.jpg",
             ].map((file, i) => (
               <Reveal key={i} delay={i * 0.05}>
-                <div className="aspect-square relative overflow-hidden group cursor-pointer">
+                <a
+                  href="https://instagram.com/ser.levemente"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block aspect-square relative overflow-hidden group cursor-pointer"
+                >
                   <Image
                     src={`/photos/${file}`}
                     alt="Ser Levemente"
@@ -299,7 +304,7 @@ export default function HomeV2() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                     </svg>
                   </div>
-                </div>
+                </a>
               </Reveal>
             ))}
           </div>
@@ -323,7 +328,7 @@ export default function HomeV2() {
           <Reveal delay={0.2}>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <a
-                href="https://wa.me/3300000000?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20uma%20encomenda%20com%20a%20Ser%20Levemente!"
+                href="https://wa.me/5527999999999?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20uma%20encomenda%20com%20a%20Ser%20Levemente!"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white text-sage px-10 py-4 rounded-full text-sm tracking-wider uppercase hover:bg-sage-light transition-all shadow-xl font-semibold"

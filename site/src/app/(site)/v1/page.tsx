@@ -167,7 +167,7 @@ export default function Home() {
                   </div>
                 </Reveal>
                 {/* Floating accent circle */}
-                <div className="absolute bottom-[20%] right-[5%] w-20 h-20 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-coral to-golden animate-float shadow-lg flex items-center justify-center">
+                <div className="absolute bottom-[20%] right-[5%] z-10 w-20 h-20 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-coral to-golden animate-float shadow-lg flex items-center justify-center">
                   <span className="text-white text-[10px] md:text-xs tracking-[0.2em] uppercase font-semibold text-center leading-tight">
                     Desde<br />2017
                   </span>
@@ -318,31 +318,30 @@ export default function Home() {
               </a>
             </div>
           </Reveal>
-          {/* Creative masonry grid */}
-          <div className="grid grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
-            {galleryPhotos.map((file, i) => {
-              const tall = i === 0 || i === 5 || i === 8;
-              const wide = i === 3 || i === 7;
-              return (
-                <Reveal key={i} delay={i * 0.05}>
-                  <div
-                    className={`relative overflow-hidden rounded-xl md:rounded-2xl group cursor-pointer
-                      ${tall ? "row-span-2" : ""}
-                      ${wide ? "col-span-2" : ""}
-                      ${tall ? "aspect-[3/5]" : wide ? "aspect-[2/1]" : "aspect-square"}
-                    `}
-                  >
-                    <Image
-                      src={`/photos/${file}`}
-                      alt="Ser Levemente"
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-coral/0 group-hover:bg-coral/20 transition-colors duration-300" />
+          {/* Gallery grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
+            {galleryPhotos.map((file, i) => (
+              <Reveal key={i} delay={i * 0.05}>
+                <a
+                  href="https://instagram.com/ser.levemente"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block aspect-square relative overflow-hidden rounded-xl md:rounded-2xl group cursor-pointer"
+                >
+                  <Image
+                    src={`/photos/${file}`}
+                    alt="Ser Levemente"
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-coral/0 group-hover:bg-coral/20 transition-colors duration-300 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                    </svg>
                   </div>
-                </Reveal>
-              );
-            })}
+                </a>
+              </Reveal>
+            ))}
           </div>
           <div className="text-center mt-8 md:hidden">
             <a
@@ -374,7 +373,7 @@ export default function Home() {
           <Reveal delay={0.2}>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <a
-                href="https://wa.me/3300000000?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20uma%20encomenda%20com%20a%20Ser%20Levemente!"
+                href="https://wa.me/5527999999999?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20uma%20encomenda%20com%20a%20Ser%20Levemente!"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#25D366] text-white px-10 py-4 rounded-full text-sm tracking-wider uppercase hover:bg-[#20BD5A] transition-all shadow-xl shadow-[#25D366]/25 font-medium"

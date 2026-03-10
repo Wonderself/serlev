@@ -279,7 +279,7 @@ export default function HomeV3() {
 
                 {/* Floating glass badge */}
                 <div
-                  className="absolute bottom-[35%] left-[15%] glass rounded-2xl p-4 shadow-xl animate-float"
+                  className="absolute bottom-[35%] left-[15%] z-10 glass rounded-2xl p-4 shadow-xl animate-float"
                   style={{ transform: "translateZ(70px)" }}
                 >
                   <p className="text-pistachio-deep text-xs font-semibold tracking-wide">Desde 2017</p>
@@ -288,7 +288,7 @@ export default function HomeV3() {
 
                 {/* Floating pill */}
                 <div
-                  className="absolute top-[15%] left-[50%] bg-pistachio-deep text-white rounded-full px-4 py-2 shadow-xl animate-float-reverse"
+                  className="absolute top-[15%] left-[50%] z-10 bg-pistachio-deep text-white rounded-full px-4 py-2 shadow-xl animate-float-reverse"
                   style={{ transform: "translateZ(60px)" }}
                 >
                   <span className="text-[10px] tracking-[0.2em] uppercase font-semibold">100% Natural</span>
@@ -483,23 +483,28 @@ export default function HomeV3() {
           </Reveal>
 
           {/* 3D tilt gallery grid */}
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
             {galleryPhotos.map((file, i) => (
               <Reveal key={i} delay={i * 0.04}>
                 <TiltCard>
-                  <div className="aspect-square relative overflow-hidden rounded-xl md:rounded-2xl group cursor-pointer">
+                  <a
+                    href="https://instagram.com/ser.levemente"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block aspect-square relative overflow-hidden rounded-xl md:rounded-2xl group cursor-pointer"
+                  >
                     <Image
                       src={`/photos/${file}`}
                       alt="Ser Levemente"
                       fill
-                      className="object-cover group-hover:scale-115 transition-transform duration-700"
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-pistachio-deep/0 group-hover:bg-pistachio-deep/30 transition-colors duration-300 flex items-center justify-center">
                       <span className="text-white text-2xl opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 transition-all duration-300">
                         ♡
                       </span>
                     </div>
-                  </div>
+                  </a>
                 </TiltCard>
               </Reveal>
             ))}
@@ -530,7 +535,7 @@ export default function HomeV3() {
 
         <div className="relative z-10 max-w-4xl mx-auto px-5">
           {/* Glass panel */}
-          <div className="glass rounded-[2rem] md:rounded-[3rem] p-8 sm:p-12 md:p-16 text-center">
+          <div className="glass rounded-[2rem] md:rounded-[3rem] p-8 sm:p-12 md:p-16 text-center" style={{ background: "rgba(0,0,0,0.25)", backdropFilter: "blur(24px)" }}>
             <Reveal>
               <h2 className="font-display text-3xl sm:text-4xl md:text-6xl font-light text-white italic mb-4 leading-tight">
                 Faça sua encomenda
@@ -544,7 +549,7 @@ export default function HomeV3() {
             <Reveal delay={0.2}>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <a
-                  href="https://wa.me/3300000000?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20uma%20encomenda%20com%20a%20Ser%20Levemente!"
+                  href="https://wa.me/5527999999999?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20uma%20encomenda%20com%20a%20Ser%20Levemente!"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-white text-pistachio-deep px-10 py-4 rounded-full text-sm tracking-wider uppercase hover:bg-pistachio-light transition-all shadow-xl font-semibold"

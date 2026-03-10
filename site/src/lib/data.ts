@@ -113,7 +113,7 @@ const defaultSettings: SiteSettings = {
   tagline: "Cozinha Consciente",
   slogan: "Seja leve me leve",
   description: "Comida saudável com afeto desde 2017. Simplificar, trazer comida boa, saudável, descomplicada na versão gostosa.",
-  whatsapp: "3300000000",
+  whatsapp: "5527999999999",
   instagram: "ser.levemente",
   email: "contato@serlevemente.com",
   logoUrl: "",
