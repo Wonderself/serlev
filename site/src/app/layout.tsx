@@ -1,0 +1,38 @@
+import type { Metadata } from "next";
+import "./globals.css";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
+
+export const metadata: Metadata = {
+  title: "Ser Levemente | Cozinha Consciente",
+  description:
+    "Comida saudável com afeto. Desde 2017, trazendo sabor e saúde com ingredientes naturais. Saudável, baixo carboidrato, vegetariana, funcional.",
+  keywords: [
+    "cozinha consciente",
+    "comida saudável",
+    "sem glúten",
+    "vegano",
+    "Trancoso",
+    "Vila Velha",
+    "brownies saudáveis",
+    "cookies veganos",
+  ],
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="pt-BR">
+      <body className="antialiased">
+        <Header />
+        <main>{children}</main>
+        <Footer />
+        <WhatsAppButton />
+      </body>
+    </html>
+  );
+}
