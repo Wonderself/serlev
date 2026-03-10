@@ -9,6 +9,7 @@ export default function Header() {
   const links = [
     { href: "/", label: "Início" },
     { href: "/cardapio", label: "Cardápio" },
+    { href: "/bio", label: "Minha História" },
     { href: "/sobre", label: "Sobre" },
     { href: "/eventos", label: "Eventos" },
     { href: "/contato", label: "Contato" },
