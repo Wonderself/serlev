@@ -126,9 +126,14 @@ export default function HomeV2() {
                 </h1>
               </Reveal>
               <Reveal delay={0.15}>
-                <h1 className="font-logo text-5xl sm:text-6xl md:text-8xl lg:text-9xl text-white leading-[0.9] mb-8">
-                  Levemente
-                </h1>
+                <div className="mb-8">
+                  <h1 className="font-logo text-5xl sm:text-6xl md:text-8xl lg:text-9xl text-white leading-[0.9]">
+                    Leve
+                  </h1>
+                  <span className="text-sm sm:text-base md:text-lg tracking-[0.6em] uppercase text-white/50 ml-1" style={{ fontWeight: 100 }}>
+                    Mente
+                  </span>
+                </div>
               </Reveal>
               <Reveal delay={0.25}>
                 <p className="text-white/70 text-base sm:text-lg md:text-xl font-light max-w-lg mb-10 leading-relaxed">

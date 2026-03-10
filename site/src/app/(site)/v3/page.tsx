@@ -196,7 +196,7 @@ export default function HomeV3() {
                 </h1>
               </Reveal>
               <Reveal delay={0.15}>
-                <span className="text-sm tracking-[0.6em] uppercase text-primary-dark/50 font-medium block mb-8 ml-1">
+                <span className="text-sm tracking-[0.6em] uppercase text-primary-dark/40 block mb-8 ml-1" style={{ fontWeight: 100 }}>
                   Mente
                 </span>
               </Reveal>

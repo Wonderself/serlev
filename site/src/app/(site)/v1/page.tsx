@@ -111,7 +111,7 @@ export default function Home() {
                 </h1>
               </Reveal>
               <Reveal delay={0.15}>
-                <span className="text-xs sm:text-sm tracking-[0.5em] uppercase text-coral font-semibold block mb-6 ml-1">
+                <span className="text-xs sm:text-sm tracking-[0.5em] uppercase text-coral block mb-6 ml-1" style={{ fontWeight: 100 }}>
                   Mente
                 </span>
               </Reveal>

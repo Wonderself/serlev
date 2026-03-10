@@ -49,7 +49,7 @@ export default function Header() {
           <span className={`font-logo text-3xl ${textColor}`}>
             Leve
           </span>
-          <span className={`text-[9px] tracking-[0.45em] uppercase ${textColor} opacity-60 -mt-1 ml-0.5`}>
+          <span className={`text-[10px] tracking-[0.5em] uppercase ${textColor} opacity-50 -mt-1 ml-0.5`} style={{ fontWeight: 100 }}>
             Mente
           </span>
         </Link>

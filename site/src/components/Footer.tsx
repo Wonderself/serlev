@@ -11,7 +11,7 @@ export default function Footer() {
               <span className="font-logo text-3xl text-cream">
                 Leve
               </span>
-              <span className="text-[9px] tracking-[0.45em] uppercase text-cream/60 ml-2">
+              <span className="text-[10px] tracking-[0.5em] uppercase text-cream/50 ml-2" style={{ fontWeight: 100 }}>
                 Mente
               </span>
             </div>
