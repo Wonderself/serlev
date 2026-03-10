@@ -39,59 +39,67 @@ const pillars = [
 export default function Home() {
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center bg-cream">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-cream via-cream/95 to-cream/40 z-10" />
-          <Image
-            src="/photos/ser.levemente_1745349010_3616572083368822439_6683801803_1.jpg"
-            alt="Ser Levemente"
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-        <div className="relative z-20 max-w-6xl mx-auto px-4 py-20">
-          <div className="max-w-xl">
-            <div className="mb-6">
-              <span className="text-5xl md:text-7xl font-light italic tracking-wide text-primary-dark">
-                Leve
-              </span>
-              <span className="text-lg md:text-xl tracking-[0.4em] uppercase text-primary ml-2">
-                Mente
-              </span>
+      {/* Hero Section - Split layout with photo natural */}
+      <section className="relative min-h-[90vh] flex items-center bg-sand">
+        <div className="max-w-6xl mx-auto px-4 py-20 w-full">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            {/* Text side */}
+            <div className="order-2 md:order-1">
+              <div className="mb-6">
+                <span className="inline-block bg-coral-light text-coral-dark text-xs tracking-[0.3em] uppercase px-4 py-2 rounded-full mb-4 font-medium">
+                  Cozinha Consciente
+                </span>
+                <h1 className="text-5xl md:text-7xl font-light italic tracking-wide text-primary-dark leading-tight">
+                  Leve
+                  <span className="text-lg md:text-xl tracking-[0.4em] uppercase text-coral not-italic ml-3 font-medium">
+                    Mente
+                  </span>
+                </h1>
+              </div>
+              <p className="text-foreground/70 leading-relaxed mb-8 max-w-md text-lg">
+                Comida saudável com afeto desde 2017. Simplificar, trazer comida boa,
+                saudável, descomplicada na versão gostosa.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href="/cardapio"
+                  className="bg-coral text-white px-8 py-3.5 rounded-full text-sm tracking-wide hover:bg-coral-dark transition-colors shadow-lg shadow-coral/25"
+                >
+                  Ver Cardápio
+                </Link>
+                <Link
+                  href="/contato"
+                  className="border-2 border-primary-dark text-primary-dark px-8 py-3.5 rounded-full text-sm tracking-wide hover:bg-primary-dark hover:text-white transition-colors"
+                >
+                  Fazer Encomenda
+                </Link>
+              </div>
             </div>
-            <p className="text-lg md:text-xl text-primary-dark/80 font-light mb-2">
-              Cozinha Consciente
-            </p>
-            <p className="text-foreground/70 leading-relaxed mb-8 max-w-md">
-              Comida saudável com afeto desde 2017. Simplificar, trazer comida boa,
-              saudável, descomplicada na versão gostosa.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/cardapio"
-                className="bg-primary-dark text-cream px-8 py-3 rounded-full text-sm tracking-wide hover:bg-primary transition-colors"
-              >
-                Ver Cardápio
-              </Link>
-              <Link
-                href="/contato"
-                className="border border-primary-dark text-primary-dark px-8 py-3 rounded-full text-sm tracking-wide hover:bg-primary-dark hover:text-cream transition-colors"
-              >
-                Fazer Encomenda
-              </Link>
+            {/* Photo side - natural, no overlay */}
+            <div className="order-1 md:order-2 relative">
+              <div className="relative h-[400px] md:h-[550px] rounded-3xl overflow-hidden shadow-2xl">
+                <Image
+                  src="/photos/ser.levemente_1745349010_3616572083368822439_6683801803_1.jpg"
+                  alt="Ser Levemente"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+              {/* Decorative elements behind photo */}
+              <div className="absolute -top-4 -right-4 w-full h-full rounded-3xl border-2 border-coral/20 -z-10" />
+              <div className="absolute -bottom-4 -left-4 w-32 h-32 rounded-2xl bg-pistachio/20 -z-10" />
             </div>
           </div>
         </div>
       </section>
 
       {/* Pillars */}
-      <section className="py-16 bg-background">
+      <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {pillars.map((p) => (
-              <div key={p.title} className="text-center p-6 rounded-2xl bg-cream/50">
+              <div key={p.title} className="text-center p-6 rounded-2xl bg-sand hover:bg-coral-light/40 transition-colors border border-coral/5">
                 <span className="text-3xl block mb-3">{p.icon}</span>
                 <h3 className="font-medium text-primary-dark mb-1">{p.title}</h3>
                 <p className="text-xs text-foreground/60">{p.text}</p>
@@ -101,8 +109,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="py-20 bg-background">
+      {/* Categories - Cards with natural photos */}
+      <section className="py-20 bg-sand">
         <div className="max-w-6xl mx-auto px-4">
           <SectionTitle
             title="Nosso Cardápio"
@@ -113,18 +121,22 @@ export default function Home() {
               <Link
                 key={cat.title}
                 href={cat.href}
-                className="group relative h-72 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow"
+                className="group bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all hover:-translate-y-1"
               >
-                <Image
-                  src={cat.image}
-                  alt={cat.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <h3 className="text-xl font-medium mb-1">{cat.title}</h3>
-                  <p className="text-sm text-white/80">{cat.description}</p>
+                <div className="relative h-56 overflow-hidden">
+                  <Image
+                    src={cat.image}
+                    alt={cat.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-medium text-primary-dark mb-1">{cat.title}</h3>
+                  <p className="text-sm text-foreground/50">{cat.description}</p>
+                  <span className="inline-block mt-3 text-coral text-sm font-medium group-hover:translate-x-1 transition-transform">
+                    Explorar &rarr;
+                  </span>
                 </div>
               </Link>
             ))}
@@ -133,7 +145,7 @@ export default function Home() {
       </section>
 
       {/* Philosophy */}
-      <section className="py-20 bg-sage-light/30">
+      <section className="py-20 bg-coral-light/30">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <SectionTitle title="O que nutre sua mente?" />
           <p className="text-foreground/70 leading-relaxed text-lg mb-6">
@@ -147,14 +159,14 @@ export default function Home() {
             mais bem vivida. Estamos aqui para fazer você levar a vida um pouco mais
             leve.
           </p>
-          <p className="text-2xl italic text-primary-dark font-light">
+          <p className="text-2xl italic text-coral-dark font-light">
             &quot;Seja leve me leve&quot;
           </p>
         </div>
       </section>
 
       {/* Gallery Preview */}
-      <section className="py-20 bg-background">
+      <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <SectionTitle title="Do nosso Instagram" subtitle="@ser.levemente" />
           <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
@@ -172,7 +184,7 @@ export default function Home() {
               "ser.levemente_1533559526_1839953124690740115_6683801803_8.jpg",
               "ser.levemente_1531318387_1821153085914835252_6683801803_8.jpg",
             ].map((file, i) => (
-              <div key={i} className="aspect-square relative rounded-lg overflow-hidden">
+              <div key={i} className="aspect-square relative rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                 <Image
                   src={`/photos/${file}`}
                   alt="Ser Levemente"
@@ -187,19 +199,19 @@ export default function Home() {
               href="https://instagram.com/ser.levemente"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary-dark hover:text-primary transition-colors text-sm tracking-wide"
+              className="inline-block bg-coral-light text-coral-dark px-6 py-2.5 rounded-full text-sm tracking-wide hover:bg-coral hover:text-white transition-colors"
             >
-              Siga-nos no Instagram →
+              Siga-nos no Instagram &rarr;
             </a>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-primary-dark text-cream">
+      <section className="py-16 bg-primary-dark text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-light mb-4">Faça sua encomenda</h2>
-          <p className="text-cream/70 mb-8">
+          <p className="text-white/70 mb-8">
             Entre em contato pelo WhatsApp ou pelo nosso formulário
           </p>
           <div className="flex flex-wrap justify-center gap-4">
@@ -207,13 +219,13 @@ export default function Home() {
               href="https://wa.me/3300000000?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20uma%20encomenda%20com%20a%20Ser%20Levemente!"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#25D366] text-white px-8 py-3 rounded-full text-sm tracking-wide hover:bg-[#20BD5A] transition-colors"
+              className="bg-[#25D366] text-white px-8 py-3.5 rounded-full text-sm tracking-wide hover:bg-[#20BD5A] transition-colors shadow-lg shadow-[#25D366]/25"
             >
               WhatsApp
             </a>
             <Link
               href="/contato"
-              className="border border-cream text-cream px-8 py-3 rounded-full text-sm tracking-wide hover:bg-cream hover:text-primary-dark transition-colors"
+              className="border-2 border-white/30 text-white px-8 py-3.5 rounded-full text-sm tracking-wide hover:bg-white hover:text-primary-dark transition-colors"
             >
               Formulário de Contato
             </Link>

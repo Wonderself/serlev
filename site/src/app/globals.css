@@ -1,15 +1,39 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* Base */
   --color-background: #faf8f5;
   --color-foreground: #2d2418;
+
+  /* Warm browns (existing, refined) */
   --color-primary: #8b6f47;
   --color-primary-light: #c4a87c;
   --color-primary-dark: #5c4a30;
   --color-accent: #d4a574;
   --color-cream: #f5f0e8;
-  --color-sage: #9cac8b;
+
+  /* Nature greens */
+  --color-sage: #7a9e6b;
   --color-sage-light: #dce5d4;
+
+  /* Pistachio palette (V3) */
+  --color-pistachio: #b5d89a;
+  --color-pistachio-light: #d8edc8;
+  --color-pistachio-dark: #6b9e4a;
+  --color-pistachio-deep: #3d7a2e;
+
+  /* Tropical/Coral palette (V1) */
+  --color-coral: #e87461;
+  --color-coral-light: #fce8e4;
+  --color-coral-dark: #c4513f;
+  --color-terracotta: #d4725c;
+  --color-sand: #faf0e4;
+  --color-golden: #e8b44c;
+
+  /* Fresh palette */
+  --color-mint: #a8d8c8;
+  --color-lime: #c8e06e;
+
   --font-sans: "Segoe UI", system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, monospace;
 }
