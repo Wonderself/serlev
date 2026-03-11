@@ -545,6 +545,20 @@ export default function BirthdayPage() {
     setFadeIn(true);
   }, []);
 
+  // Skip animation on any click, tap, or keypress
+  useEffect(() => {
+    if (phase === "reveal") return;
+    const handler = () => skipAnimation();
+    window.addEventListener("click", handler);
+    window.addEventListener("keydown", handler);
+    window.addEventListener("touchstart", handler);
+    return () => {
+      window.removeEventListener("click", handler);
+      window.removeEventListener("keydown", handler);
+      window.removeEventListener("touchstart", handler);
+    };
+  }, [phase, skipAnimation]);
+
   const giftPhase = phase === "intro" ? "idle" : phase === "reveal" ? "burst" : phase;
 
   return (
