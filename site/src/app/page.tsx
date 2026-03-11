@@ -428,8 +428,8 @@ function GiftBox({ phase }: { phase: "idle" | "shake" | "glow" | "open" | "burst
             className="absolute left-1/2 -translate-x-1/2"
             style={{
               bottom: "min(56px, 15vw)",
-              width: "min(130px, 44vw)",
-              height: "min(88px, 29vw)",
+              width: "min(140px, 46vw)",
+              height: "min(96px, 32vw)",
             }}
           >
             {/* Bow shadow cast on lid */}
@@ -442,10 +442,10 @@ function GiftBox({ phase }: { phase: "idle" | "shake" | "glow" | "open" | "burst
             <div
               className="absolute"
               style={{
-                right: "38%",
-                top: "5%",
-                width: "72%",
-                height: "68%",
+                right: "36%",
+                top: "0%",
+                width: "74%",
+                height: "75%",
                 borderRadius: "50% 48% 42% 50% / 52% 70% 30% 48%",
                 background: `linear-gradient(140deg,
                   #ffe8a8 0%, #f5d680 18%, #e8c060 35%,
@@ -455,7 +455,7 @@ function GiftBox({ phase }: { phase: "idle" | "shake" | "glow" | "open" | "burst
                   inset -3px -3px 8px rgba(0,0,0,0.15),
                   0 4px 14px rgba(0,0,0,0.3)
                 `,
-                transform: "rotate(-18deg)",
+                transform: "rotate(-15deg)",
               }}
             >
               <div className="absolute inset-0 rounded-[inherit]" style={{
@@ -467,10 +467,10 @@ function GiftBox({ phase }: { phase: "idle" | "shake" | "glow" | "open" | "burst
             <div
               className="absolute"
               style={{
-                left: "38%",
-                top: "5%",
-                width: "72%",
-                height: "68%",
+                left: "36%",
+                top: "0%",
+                width: "74%",
+                height: "75%",
                 borderRadius: "48% 50% 50% 42% / 70% 52% 48% 30%",
                 background: `linear-gradient(220deg,
                   #ffe8a8 0%, #f5d680 18%, #e8c060 35%,
@@ -480,7 +480,7 @@ function GiftBox({ phase }: { phase: "idle" | "shake" | "glow" | "open" | "burst
                   inset 3px -3px 8px rgba(0,0,0,0.15),
                   0 4px 14px rgba(0,0,0,0.3)
                 `,
-                transform: "rotate(18deg)",
+                transform: "rotate(15deg)",
               }}
             >
               <div className="absolute inset-0 rounded-[inherit]" style={{
@@ -514,13 +514,13 @@ function GiftBox({ phase }: { phase: "idle" | "shake" | "glow" | "open" | "burst
 
             {/* Center knot */}
             <div className="absolute left-1/2 -translate-x-1/2 z-10" style={{
-              top: "22%", width: "30%", height: "50%",
+              top: "18%", width: "22%", height: "38%",
             }}>
               <div className="absolute inset-0" style={{
-                borderRadius: "38% 38% 42% 42%",
-                background: `radial-gradient(circle at 36% 28%,
-                  #fff8e0 0%, #ffe4a0 12%, #f5d680 28%, #e8c060 42%,
-                  #d4a040 58%, #a88020 78%, #8b6914 100%)`,
+                borderRadius: "44% 44% 48% 48%",
+                background: `radial-gradient(circle at 40% 30%,
+                  #fff8e0 0%, #ffe4a0 15%, #f5d680 30%, #e8c060 45%,
+                  #d4a040 60%, #a88020 80%, #8b6914 100%)`,
                 boxShadow: `
                   0 3px 12px rgba(0,0,0,0.4),
                   0 0 20px rgba(255,215,0,0.3),
@@ -528,12 +528,12 @@ function GiftBox({ phase }: { phase: "idle" | "shake" | "glow" | "open" | "burst
                 `,
               }} />
               <div className="absolute rounded-full" style={{
-                top: "10%", left: "16%", width: "42%", height: "34%",
-                background: "radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.75), transparent 75%)",
+                top: "12%", left: "18%", width: "38%", height: "30%",
+                background: "radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.7), transparent 70%)",
               }} />
               {/* Fold line */}
-              <div className="absolute left-[28%] top-[48%] w-[44%] h-px rotate-[-8deg]" style={{
-                background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent)",
+              <div className="absolute left-[28%] top-[52%] w-[44%] h-px rotate-[-6deg]" style={{
+                background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.12), transparent)",
               }} />
             </div>
           </div>
