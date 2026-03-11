@@ -165,533 +165,383 @@ function ScreenFlash({ active }: { active: boolean }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   HYPERREALISTIC GIFT BOX
+   GIFT BOX — Redesigned for coherence
 
-   Design philosophy:
-   - Deep crimson velvet body with realistic specular highlights
-   - Metallic gold satin ribbon with animated shimmer
-   - Elaborate satin bow with volume and light play
-   - Lid LIFTS UPWARD when opening (clear visual separation)
-   - Golden light beam from interior gap
-   - Particles rising from inside
-   - Floor reflection/shadow for grounding
+   Architecture:
+   - Container holds everything with proper proportions
+   - Burst-fade wrapper: entire box fades + shrinks together (no orphaned glows)
+   - Lid + Bow in ONE wrapper: they lift together, bow uses fixed min(px,vw) sizing
+   - Light beam & effects only during "open" phase, NOT during "burst"
+   - Body: deep crimson with gold ribbons + jewel at crossing
    ═══════════════════════════════════════════════════════════ */
 function GiftBox({ phase }: { phase: "idle" | "shake" | "glow" | "open" | "burst" }) {
   const isOpen = phase === "open";
   const isBurst = phase === "burst";
   const isOpening = isOpen || isBurst;
 
-  // How far the lid lifts
-  // max() with negatives = less negative = caps the upward movement
-  const lidTransform = isOpen
-    ? "translateY(max(-110px, -30vw)) rotateX(-15deg) scale(1.02)"
-    : isBurst
-      ? "translateY(max(-200px, -50vw)) rotateX(-30deg) scale(0.3)"
-      : "translateY(0) rotateX(0deg) scale(1)";
+  // Lid+bow wrapper lift amount (max caps negative value on large screens)
+  const liftY = isOpen ? "translateY(max(-85px, -22vw))" : "translateY(0)";
+
+  // Shared gold ribbon gradient (horizontal direction)
+  const ribbonGrad = `linear-gradient(90deg,
+    #5c4510 0%, #8b6914 14%, #c49530 32%, #e8b84c 44%,
+    #f5d680 48%, #ffe4a0 50%, #f5d680 52%,
+    #e8b84c 56%, #c49530 68%, #8b6914 86%, #5c4510 100%)`;
+  const ribbonGradV = `linear-gradient(180deg,
+    #5c4510 0%, #8b6914 14%, #c49530 32%, #e8b84c 44%,
+    #f5d680 48%, #ffe4a0 50%, #f5d680 52%,
+    #e8b84c 56%, #c49530 68%, #8b6914 86%, #5c4510 100%)`;
+
+  // Noise texture SVG data URI
+  const noiseSvg = `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
 
   return (
     <div
       className="relative"
       style={{
-        width: "min(310px, 72vw)",
-        height: "min(400px, 92vw)",
+        width: "min(270px, 66vw)",
+        height: "min(380px, 92vw)",
         animation: phase === "shake" ? "gift-shake-lux 0.55s ease-in-out 5" : "none",
       }}
     >
-      {/* ══════ Floor reflection ══════ */}
+      {/* ═══ BURST FADE WRAPPER ═══
+          Everything inside fades + shrinks together during burst.
+          No more orphaned glows or flat golden ellipses. */}
       <div
-        className="absolute left-[5%] right-[5%] bottom-[-2%] h-[18%] transition-all duration-1000"
+        className="absolute inset-0"
         style={{
-          background: `
-            radial-gradient(ellipse 90% 60% at 50% 0%,
-              rgba(140,20,20,0.15) 0%,
-              rgba(80,10,10,0.08) 40%,
-              transparent 70%)
-          `,
-          filter: "blur(12px)",
-          opacity: isBurst ? 0 : 0.9,
-        }}
-      />
-      {/* Contact shadow */}
-      <div
-        className="absolute left-[10%] right-[10%] bottom-[1%] h-[4%] transition-all duration-1000"
-        style={{
-          background: "radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.6), transparent 70%)",
-          filter: "blur(8px)",
           opacity: isBurst ? 0 : 1,
-        }}
-      />
-
-      {/* ══════ Ambient glow ══════ */}
-      <div
-        className="absolute rounded-full transition-all"
-        style={{
-          inset: "-60%",
-          background: "radial-gradient(circle, rgba(255,215,0,0.12), rgba(200,30,30,0.04), transparent 55%)",
-          opacity: phase === "glow" || isOpening ? 1 : 0,
-          transform: isBurst ? "scale(6)" : isOpen ? "scale(3)" : "scale(0.3)",
-          transition: "all 2.5s cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
-      />
-
-      {/* ══════ GOLDEN LIGHT BEAM from gap ══════ */}
-      {/* Upward beam */}
-      <div
-        className="absolute left-[14%] right-[14%] transition-all"
-        style={{
-          top: "5%",
-          height: "35%",
-          background: `
-            radial-gradient(ellipse 70% 100% at 50% 100%,
-              rgba(255,255,240,0.9) 0%,
-              rgba(255,250,200,0.6) 15%,
-              rgba(255,215,0,0.3) 35%,
-              rgba(232,180,76,0.1) 55%,
-              transparent 75%)
-          `,
-          opacity: isOpening ? 1 : 0,
-          transform: isOpening ? "scaleY(1)" : "scaleY(0)",
-          transformOrigin: "bottom center",
-          transition: isOpening ? "all 2s ease-out 0.5s" : "all 0.3s ease-in",
-          filter: "blur(6px)",
-          zIndex: 5,
-        }}
-      />
-      {/* Gap glow line */}
-      <div
-        className="absolute left-[8%] right-[8%] transition-all"
-        style={{
-          top: "35%",
-          height: "6px",
-          background: `
-            radial-gradient(ellipse 80% 100% at 50% 50%,
-              rgba(255,255,240,1) 0%,
-              rgba(255,250,200,0.8) 30%,
-              rgba(255,215,0,0.4) 60%,
-              transparent 90%)
-          `,
-          opacity: isOpening ? 1 : 0,
-          transition: isOpening ? "opacity 1s ease-out 0.3s" : "opacity 0.2s ease-in",
-          filter: "blur(3px)",
-          zIndex: 6,
-        }}
-      />
-
-      {/* Rising sparkles from inside */}
-      <RisingParticles active={isOpening} />
-
-      {/* ══════════════════════════════════════════════════
-         BOX BODY
-         Multi-layered crimson velvet with specular highlights
-         ══════════════════════════════════════════════════ */}
-      <div
-        className="absolute left-[7%] right-[7%] bottom-[3%] rounded-b-[10px] rounded-t-[6px] transition-all overflow-hidden"
-        style={{
-          top: "37%",
-          background: `
-            radial-gradient(ellipse 60% 40% at 22% 10%, rgba(255,255,255,0.09) 0%, transparent 100%),
-            linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.2) 100%),
-            linear-gradient(172deg,
-              #f44040 0%, #ef3535 8%, #dc2626 16%, #c81e1e 26%,
-              #b91c1c 38%, #a01818 50%, #8b1414 62%,
-              #7f1d1d 74%, #6b1515 86%, #5c1010 100%)
-          `,
-          boxShadow: `
-            0 2px 3px rgba(0,0,0,0.5),
-            0 8px 20px rgba(0,0,0,0.4),
-            0 25px 50px -5px rgba(0,0,0,0.5),
-            0 50px 100px -15px rgba(0,0,0,0.3),
-            inset 0 1px 0 rgba(255,255,255,0.12),
-            inset -2px 0 8px rgba(0,0,0,0.08),
-            inset 2px 0 8px rgba(0,0,0,0.08),
-            inset 0 -4px 12px rgba(0,0,0,0.12)
-          `,
-          transform: isBurst ? "scale(0) rotateX(20deg)" : "none",
-          opacity: isBurst ? 0 : 1,
-          transitionDuration: "1s",
+          transform: isBurst ? "scale(0.5)" : "scale(1)",
+          transition: isBurst ? "all 1s ease-in" : "opacity 0.3s",
         }}
       >
-        {/* Velvet noise texture */}
+        {/* ── Floor reflection ── */}
         <div
-          className="absolute inset-0 opacity-[0.05]"
+          className="absolute left-[5%] right-[5%] bottom-[-2%] h-[16%]"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            background: "radial-gradient(ellipse 90% 60% at 50% 0%, rgba(140,20,20,0.15), rgba(80,10,10,0.08) 40%, transparent 70%)",
+            filter: "blur(12px)",
+          }}
+        />
+        {/* Contact shadow */}
+        <div
+          className="absolute left-[12%] right-[12%] bottom-[2%] h-[3%]"
+          style={{
+            background: "radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.55), transparent 70%)",
+            filter: "blur(6px)",
           }}
         />
 
-        {/* Top edge highlight */}
+        {/* ── Ambient glow (glow & open phases only, NOT burst) ── */}
         <div
-          className="absolute top-0 left-[3%] right-[3%] h-px"
+          className="absolute rounded-full"
           style={{
-            background: "linear-gradient(90deg, transparent 5%, rgba(255,200,200,0.3) 30%, rgba(255,220,220,0.4) 50%, rgba(255,200,200,0.3) 70%, transparent 95%)",
+            inset: "-60%",
+            background: "radial-gradient(circle, rgba(255,215,0,0.12), rgba(200,30,30,0.04), transparent 55%)",
+            opacity: phase === "glow" || isOpen ? 1 : 0,
+            transform: isOpen ? "scale(3)" : "scale(0.3)",
+            transition: "all 2.5s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         />
 
-        {/* Left edge highlight */}
+        {/* ── GOLDEN LIGHT BEAM from gap (only "open", NOT "burst") ── */}
         <div
-          className="absolute top-[3%] left-0 bottom-[3%] w-px"
+          className="absolute left-[15%] right-[15%]"
           style={{
-            background: "linear-gradient(180deg, transparent 5%, rgba(255,200,200,0.15) 30%, rgba(255,200,200,0.2) 50%, rgba(255,200,200,0.15) 70%, transparent 95%)",
+            top: "5%",
+            height: "39%",
+            background: `radial-gradient(ellipse 70% 100% at 50% 100%,
+              rgba(255,255,240,0.85) 0%, rgba(255,250,200,0.5) 15%,
+              rgba(255,215,0,0.25) 35%, rgba(232,180,76,0.08) 55%, transparent 75%)`,
+            opacity: isOpen ? 1 : 0,
+            transform: isOpen ? "scaleY(1)" : "scaleY(0)",
+            transformOrigin: "bottom center",
+            transition: isOpen ? "all 2s ease-out 0.5s" : "all 0.3s ease-in",
+            filter: "blur(6px)",
+            zIndex: 5,
+          }}
+        />
+        {/* Gap glow line — right at body top */}
+        <div
+          className="absolute left-[8%] right-[8%]"
+          style={{
+            top: "43.5%",
+            height: "6px",
+            background: `radial-gradient(ellipse 80% 100% at 50% 50%,
+              rgba(255,255,240,1) 0%, rgba(255,250,200,0.8) 30%,
+              rgba(255,215,0,0.4) 60%, transparent 90%)`,
+            opacity: isOpen ? 1 : 0,
+            transition: isOpen ? "opacity 1s ease-out 0.3s" : "opacity 0.2s ease-in",
+            filter: "blur(3px)",
+            zIndex: 6,
           }}
         />
 
-        {/* Interior glow visible at top when open */}
+        {/* Rising sparkles from inside */}
+        <RisingParticles active={isOpen} />
+
+        {/* ══════════════════════════════════════════════
+           BOX BODY — Deep crimson with gold ribbons
+           Body top at 44%, lid bottom flush at 44%
+           ══════════════════════════════════════════════ */}
         <div
-          className="absolute top-0 left-[3%] right-[3%] h-[40%] transition-all"
+          className="absolute left-[10%] right-[10%] bottom-[4%] rounded-b-[10px] rounded-t-[5px] overflow-hidden"
           style={{
-            background: `radial-gradient(ellipse 80% 100% at 50% 0%, rgba(255,250,220,0.5), rgba(255,215,0,0.2), transparent 70%)`,
-            opacity: isOpening ? 1 : 0,
-            transition: "opacity 1.2s ease-out",
-          }}
-        />
-
-        {/* ── Vertical gold satin ribbon ── */}
-        <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 overflow-hidden" style={{ width: "13.5%" }}>
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(90deg,
-                #5c4510 0%, #705a10 5%, #8b6914 12%, #a88020 20%,
-                #c49530 28%, #d4a040 35%, #e8b84c 42%,
-                #f5d680 48%, #ffe4a0 50%, #f5d680 52%,
-                #e8b84c 58%, #d4a040 65%, #c49530 72%,
-                #a88020 80%, #8b6914 88%, #705a10 95%, #5c4510 100%)`,
-              boxShadow: "inset 0 0 4px rgba(0,0,0,0.1)",
-            }}
-          />
-          {/* Animated shimmer traveling down */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.02) 35%, rgba(255,255,255,0.4) 48%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.4) 52%, rgba(255,255,255,0.02) 65%, transparent 100%)",
-              backgroundSize: "100% 350%",
-              animation: isOpening ? "none" : "ribbon-shimmer-v 4s ease-in-out infinite",
-            }}
-          />
-          {/* Edge shadows for depth */}
-          <div className="absolute top-0 bottom-0 left-0 w-[2px]" style={{ background: "linear-gradient(180deg, transparent, rgba(0,0,0,0.15), transparent)" }} />
-          <div className="absolute top-0 bottom-0 right-0 w-[2px]" style={{ background: "linear-gradient(180deg, transparent, rgba(0,0,0,0.15), transparent)" }} />
-        </div>
-
-        {/* ── Horizontal gold satin ribbon ── */}
-        <div className="absolute left-0 right-0 overflow-hidden" style={{ top: "42%", height: "13.5%" }}>
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(180deg,
-                #5c4510 0%, #705a10 5%, #8b6914 12%, #a88020 20%,
-                #c49530 28%, #d4a040 35%, #e8b84c 42%,
-                #f5d680 48%, #ffe4a0 50%, #f5d680 52%,
-                #e8b84c 58%, #d4a040 65%, #c49530 72%,
-                #a88020 80%, #8b6914 88%, #705a10 95%, #5c4510 100%)`,
-              boxShadow: "inset 0 0 4px rgba(0,0,0,0.1)",
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.02) 35%, rgba(255,255,255,0.4) 48%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.4) 52%, rgba(255,255,255,0.02) 65%, transparent 100%)",
-              backgroundSize: "350% 100%",
-              animation: isOpening ? "none" : "ribbon-shimmer-h 4s ease-in-out 2s infinite",
-            }}
-          />
-          <div className="absolute left-0 right-0 top-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.12), transparent)" }} />
-          <div className="absolute left-0 right-0 bottom-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.12), transparent)" }} />
-        </div>
-
-        {/* ── Center jewel at ribbon crossing ── */}
-        <div className="absolute left-1/2 z-10 -translate-x-1/2" style={{ top: "41.5%", width: "15%", paddingBottom: "15%" }}>
-          {/* Outer glow */}
-          <div
-            className="absolute inset-[-30%] rounded-full"
-            style={{
-              background: "radial-gradient(circle, rgba(255,215,0,0.2), transparent 60%)",
-              animation: isOpening ? "none" : "jewel-pulse 3s ease-in-out infinite",
-            }}
-          />
-          {/* Jewel body */}
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              background: `radial-gradient(circle at 36% 30%,
-                #fff8e0 0%, #ffe4a0 12%, #f5d680 28%, #d4a040 50%, #a88020 75%, #8b6914 100%)`,
-              boxShadow: `
-                0 2px 12px rgba(0,0,0,0.45),
-                0 0 30px rgba(255,215,0,0.25),
-                inset 0 1px 3px rgba(255,255,255,0.5),
-                inset 0 -1px 2px rgba(0,0,0,0.2)
-              `,
-            }}
-          />
-          {/* Specular highlight */}
-          <div
-            className="absolute rounded-full"
-            style={{
-              top: "12%",
-              left: "18%",
-              width: "40%",
-              height: "35%",
-              background: "radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.8), rgba(255,255,255,0.2) 50%, transparent 80%)",
-            }}
-          />
-          {/* Secondary highlight */}
-          <div
-            className="absolute rounded-full"
-            style={{
-              bottom: "18%",
-              right: "15%",
-              width: "18%",
-              height: "15%",
-              background: "radial-gradient(circle, rgba(255,255,255,0.3), transparent 70%)",
-            }}
-          />
-        </div>
-      </div>
-
-      {/* ══════════════════════════════════════════════════
-         LID — LIFTS UPWARD when opening
-         The clear gap + golden light makes the opening unmistakable
-         ══════════════════════════════════════════════════ */}
-      <div
-        className="absolute left-[3%] right-[3%] rounded-[14px] z-10 transition-all"
-        style={{
-          top: "22%",
-          height: "17%",
-          transform: lidTransform,
-          transitionDuration: isOpen ? "2.8s" : isBurst ? "0.9s" : "0.5s",
-          transitionTimingFunction: isOpen
-            ? "cubic-bezier(0.22, 0.61, 0.36, 1)"
-            : "cubic-bezier(0.16, 1, 0.3, 1)",
-          opacity: isBurst ? 0 : 1,
-          filter: isOpen ? "drop-shadow(0 8px 20px rgba(0,0,0,0.4))" : "none",
-        }}
-      >
-        {/* Lid main face */}
-        <div
-          className="absolute inset-0 rounded-[14px] overflow-hidden"
-          style={{
+            top: "44%",
             background: `
-              radial-gradient(ellipse 50% 50% at 25% 20%, rgba(255,255,255,0.14) 0%, transparent 60%),
-              linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.08) 100%),
+              radial-gradient(ellipse 60% 40% at 22% 10%, rgba(255,255,255,0.09), transparent),
+              linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.18) 100%),
               linear-gradient(172deg,
-                #f87171 0%, #ef4444 12%, #dc2626 28%, #c81e1e 48%,
-                #b91c1c 65%, #a01818 80%, #8b1414 100%)
+                #ef3535 0%, #dc2626 15%, #c81e1e 30%,
+                #b91c1c 45%, #a01818 60%, #8b1414 75%, #7f1d1d 90%)
             `,
             boxShadow: `
-              0 6px 35px rgba(0,0,0,0.35),
-              0 2px 10px rgba(0,0,0,0.25),
-              inset 0 1px 0 rgba(255,255,255,0.2),
-              inset 0 -1px 3px rgba(0,0,0,0.12)
+              0 2px 3px rgba(0,0,0,0.5),
+              0 8px 20px rgba(0,0,0,0.4),
+              0 25px 50px -5px rgba(0,0,0,0.5),
+              inset 0 1px 0 rgba(255,255,255,0.12),
+              inset -2px 0 8px rgba(0,0,0,0.08),
+              inset 2px 0 8px rgba(0,0,0,0.08),
+              inset 0 -4px 12px rgba(0,0,0,0.12)
             `,
           }}
         >
-          {/* Velvet texture */}
-          <div
-            className="absolute inset-0 opacity-[0.05]"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-            }}
-          />
+          {/* Velvet noise texture */}
+          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: noiseSvg }} />
+
+          {/* Top edge highlight */}
+          <div className="absolute top-0 left-[3%] right-[3%] h-px" style={{
+            background: "linear-gradient(90deg, transparent, rgba(255,200,200,0.3) 30%, rgba(255,220,220,0.4) 50%, rgba(255,200,200,0.3) 70%, transparent)",
+          }} />
+          {/* Left edge highlight */}
+          <div className="absolute top-[3%] left-0 bottom-[3%] w-px" style={{
+            background: "linear-gradient(180deg, transparent, rgba(255,200,200,0.15) 30%, rgba(255,200,200,0.2) 50%, transparent 95%)",
+          }} />
+
+          {/* Interior glow when open */}
+          <div className="absolute top-0 left-[3%] right-[3%] h-[35%]" style={{
+            background: "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(255,250,220,0.5), rgba(255,215,0,0.15), transparent 70%)",
+            opacity: isOpen ? 1 : 0,
+            transition: "opacity 1.2s ease-out",
+          }} />
+
+          {/* ── Vertical gold satin ribbon ── */}
+          <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 overflow-hidden" style={{ width: "12%" }}>
+            <div className="absolute inset-0" style={{ background: ribbonGrad, boxShadow: "inset 0 0 3px rgba(0,0,0,0.08)" }} />
+            <div className="absolute inset-0" style={{
+              background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.35) 49%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.35) 51%, transparent)",
+              backgroundSize: "100% 350%",
+              animation: isOpening ? "none" : "ribbon-shimmer-v 4s ease-in-out infinite",
+            }} />
+            <div className="absolute top-0 bottom-0 left-0 w-[1.5px]" style={{ background: "linear-gradient(180deg, transparent, rgba(0,0,0,0.12), transparent)" }} />
+            <div className="absolute top-0 bottom-0 right-0 w-[1.5px]" style={{ background: "linear-gradient(180deg, transparent, rgba(0,0,0,0.12), transparent)" }} />
+          </div>
+
+          {/* ── Horizontal gold satin ribbon ── */}
+          <div className="absolute left-0 right-0 overflow-hidden" style={{ top: "38%", height: "12%" }}>
+            <div className="absolute inset-0" style={{ background: ribbonGradV, boxShadow: "inset 0 0 3px rgba(0,0,0,0.08)" }} />
+            <div className="absolute inset-0" style={{
+              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.35) 49%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.35) 51%, transparent)",
+              backgroundSize: "350% 100%",
+              animation: isOpening ? "none" : "ribbon-shimmer-h 4s ease-in-out 2s infinite",
+            }} />
+            <div className="absolute left-0 right-0 top-0 h-[1.5px]" style={{ background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent)" }} />
+            <div className="absolute left-0 right-0 bottom-0 h-[1.5px]" style={{ background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent)" }} />
+          </div>
+
+          {/* ── Center jewel at ribbon crossing ── */}
+          <div className="absolute left-1/2 z-10 -translate-x-1/2" style={{ top: "36%", width: "13%", paddingBottom: "13%" }}>
+            <div className="absolute inset-[-25%] rounded-full" style={{
+              background: "radial-gradient(circle, rgba(255,215,0,0.2), transparent 60%)",
+              animation: isOpening ? "none" : "jewel-pulse 3s ease-in-out infinite",
+            }} />
+            <div className="absolute inset-0 rounded-full" style={{
+              background: `radial-gradient(circle at 36% 30%,
+                #fff8e0 0%, #ffe4a0 12%, #f5d680 28%, #d4a040 50%, #a88020 75%, #8b6914 100%)`,
+              boxShadow: "0 2px 10px rgba(0,0,0,0.4), 0 0 22px rgba(255,215,0,0.2), inset 0 1px 3px rgba(255,255,255,0.5)",
+            }} />
+            <div className="absolute rounded-full" style={{
+              top: "14%", left: "20%", width: "38%", height: "32%",
+              background: "radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.75), transparent 80%)",
+            }} />
+          </div>
         </div>
 
-        {/* Lid bottom edge - dark line showing separation */}
+        {/* ══════════════════════════════════════════════════
+           LID + BOW WRAPPER — They lift together as one unit.
+           Wrapper spans from top of container down to body top (44%).
+           Lid sits at the BOTTOM of this wrapper = flush with body top.
+           Bow sits above lid with FIXED min(px,vw) sizing.
+           ══════════════════════════════════════════════════ */}
         <div
-          className="absolute bottom-0 left-[2%] right-[2%] h-[3px] rounded-full"
+          className="absolute left-0 right-0 top-0 z-10"
           style={{
-            background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.25) 15%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.25) 85%, transparent)",
-          }}
-        />
-
-        {/* Lid top edge highlight */}
-        <div
-          className="absolute top-0 left-[4%] right-[4%] h-px rounded-full"
-          style={{
-            background: "linear-gradient(90deg, transparent, rgba(255,220,220,0.35) 30%, rgba(255,230,230,0.4) 50%, rgba(255,220,220,0.35) 70%, transparent)",
-          }}
-        />
-
-        {/* Lid ribbon strip */}
-        <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 overflow-hidden rounded-[14px]" style={{ width: "12.8%" }}>
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(90deg,
-                #5c4510 0%, #8b6914 12%, #c49530 28%, #e8b84c 42%,
-                #f5d680 48%, #ffe4a0 50%, #f5d680 52%,
-                #e8b84c 58%, #c49530 72%, #8b6914 88%, #5c4510 100%)`,
-            }}
-          />
-        </div>
-
-        {/* ══════════ LUXURIOUS SATIN BOW ══════════ */}
-        <div
-          className="absolute left-1/2 -translate-x-1/2"
-          style={{
-            bottom: "55%",
-            width: "min(180px, 56%)",
-            height: "min(130px, 40%)",
+            bottom: "56%",
+            transform: liftY,
+            transition: isOpen
+              ? "transform 2.8s cubic-bezier(0.22, 0.61, 0.36, 1)"
+              : "transform 0.5s ease",
+            filter: isOpen ? "drop-shadow(0 8px 20px rgba(0,0,0,0.35))" : "none",
           }}
         >
-          {/* Bow shadow on lid */}
+          {/* ── LID — sits at bottom of wrapper, wider than body ── */}
           <div
-            className="absolute left-[15%] right-[15%] bottom-[-20%] h-[25%]"
+            className="absolute left-[7%] right-[7%] bottom-0 overflow-hidden"
             style={{
-              background: "radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.2), transparent 70%)",
-              filter: "blur(6px)",
-            }}
-          />
-
-          {/* Left satin loop — rich gradient with internal light */}
-          <div
-            className="absolute right-[44%] top-[8%]"
-            style={{
-              width: "105%",
-              height: "78%",
-              borderRadius: "58% 45% 35% 58% / 55% 82% 20% 48%",
-              background: `linear-gradient(145deg,
-                #ffe8a8 0%, #f5d680 15%, #e8c060 28%, #d4a040 42%,
-                #c49020 55%, #a88020 68%, #8b6914 82%, #705a10 100%)`,
-              boxShadow: `
-                inset 5px 5px 15px rgba(255,255,255,0.45),
-                inset -4px -4px 10px rgba(0,0,0,0.2),
-                0 5px 18px rgba(0,0,0,0.35),
-                0 2px 6px rgba(0,0,0,0.2)
+              height: "min(56px, 15vw)",
+              borderRadius: "10px 10px 5px 5px",
+              background: `
+                radial-gradient(ellipse 50% 50% at 25% 20%, rgba(255,255,255,0.14), transparent 60%),
+                linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.06) 100%),
+                linear-gradient(172deg,
+                  #f87171 0%, #ef4444 12%, #dc2626 28%, #c81e1e 48%,
+                  #b91c1c 65%, #a01818 80%, #8b1414 100%)
               `,
-              transform: "rotate(-24deg)",
+              boxShadow: `
+                0 4px 20px rgba(0,0,0,0.3),
+                0 2px 8px rgba(0,0,0,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.2),
+                inset 0 -1px 3px rgba(0,0,0,0.1)
+              `,
             }}
           >
-            {/* Primary specular */}
-            <div
-              className="absolute inset-0 rounded-[inherit]"
-              style={{
-                background: "radial-gradient(ellipse 60% 50% at 32% 22%, rgba(255,255,255,0.5), transparent 60%)",
-              }}
-            />
-            {/* Secondary specular */}
-            <div
-              className="absolute inset-0 rounded-[inherit]"
-              style={{
-                background: "radial-gradient(ellipse 30% 25% at 65% 70%, rgba(255,255,255,0.15), transparent 50%)",
-              }}
-            />
+            {/* Velvet texture */}
+            <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: noiseSvg }} />
+            {/* Bottom edge shadow */}
+            <div className="absolute bottom-0 left-[2%] right-[2%] h-[3px] rounded-full" style={{
+              background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.25) 15%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.25) 85%, transparent)",
+            }} />
+            {/* Top edge highlight */}
+            <div className="absolute top-0 left-[4%] right-[4%] h-px" style={{
+              background: "linear-gradient(90deg, transparent, rgba(255,220,220,0.35) 30%, rgba(255,230,230,0.4) 50%, rgba(255,220,220,0.35) 70%, transparent)",
+            }} />
+            {/* Ribbon strip on lid */}
+            <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 overflow-hidden" style={{ width: "11.5%" }}>
+              <div className="absolute inset-0" style={{ background: ribbonGrad }} />
+            </div>
           </div>
 
-          {/* Right satin loop */}
+          {/* ══════════ SATIN BOW ══════════
+              Fixed min(px,vw) sizing — NOT percentage of lid height!
+              Positioned just above lid. */}
           <div
-            className="absolute left-[44%] top-[8%]"
+            className="absolute left-1/2 -translate-x-1/2"
             style={{
-              width: "105%",
-              height: "78%",
-              borderRadius: "45% 58% 58% 35% / 82% 55% 48% 20%",
-              background: `linear-gradient(215deg,
-                #ffe8a8 0%, #f5d680 15%, #e8c060 28%, #d4a040 42%,
-                #c49020 55%, #a88020 68%, #8b6914 82%, #705a10 100%)`,
-              boxShadow: `
-                inset -5px 5px 15px rgba(255,255,255,0.45),
-                inset 4px -4px 10px rgba(0,0,0,0.2),
-                0 5px 18px rgba(0,0,0,0.35),
-                0 2px 6px rgba(0,0,0,0.2)
-              `,
-              transform: "rotate(24deg)",
+              bottom: "min(56px, 15vw)",
+              width: "min(130px, 44vw)",
+              height: "min(88px, 29vw)",
             }}
           >
-            <div
-              className="absolute inset-0 rounded-[inherit]"
-              style={{
-                background: "radial-gradient(ellipse 60% 50% at 68% 22%, rgba(255,255,255,0.5), transparent 60%)",
-              }}
-            />
-            <div
-              className="absolute inset-0 rounded-[inherit]"
-              style={{
-                background: "radial-gradient(ellipse 30% 25% at 35% 70%, rgba(255,255,255,0.15), transparent 50%)",
-              }}
-            />
-          </div>
+            {/* Bow shadow cast on lid */}
+            <div className="absolute left-[20%] right-[20%] bottom-[-12%] h-[18%]" style={{
+              background: "radial-gradient(ellipse, rgba(0,0,0,0.18), transparent 70%)",
+              filter: "blur(5px)",
+            }} />
 
-          {/* Left tail - curving ribbon */}
-          <div
-            className="absolute left-[8%] bottom-[-45%]"
-            style={{
-              width: "15%",
-              height: "75%",
-              background: `linear-gradient(90deg, #8b6914, #c49020 25%, #e8b84c 45%, #f5d680 55%, #d4a040 75%, #a88020)`,
-              borderRadius: "3px 3px 35% 65%",
-              transform: "rotate(-32deg)",
-              boxShadow: "2px 4px 10px rgba(0,0,0,0.35)",
-            }}
-          />
-
-          {/* Right tail */}
-          <div
-            className="absolute right-[8%] bottom-[-45%]"
-            style={{
-              width: "15%",
-              height: "75%",
-              background: `linear-gradient(90deg, #a88020, #d4a040 25%, #f5d680 45%, #e8b84c 55%, #c49020 75%, #8b6914)`,
-              borderRadius: "3px 3px 65% 35%",
-              transform: "rotate(32deg)",
-              boxShadow: "-2px 4px 10px rgba(0,0,0,0.35)",
-            }}
-          />
-
-          {/* Center knot — ornamental, jewel-like */}
-          <div
-            className="absolute left-1/2 -translate-x-1/2 z-10"
-            style={{ top: "22%", width: "34%", height: "50%" }}
-          >
+            {/* Left satin loop — large elliptical shape */}
             <div
-              className="absolute inset-0"
+              className="absolute"
               style={{
-                borderRadius: "40% 40% 45% 45%",
-                background: `radial-gradient(circle at 36% 28%,
-                  #fff8e0 0%, #ffe4a0 10%, #f5d680 25%, #e8c060 40%, #d4a040 55%, #a88020 75%, #8b6914 100%)`,
+                right: "38%",
+                top: "5%",
+                width: "72%",
+                height: "68%",
+                borderRadius: "50% 48% 42% 50% / 52% 70% 30% 48%",
+                background: `linear-gradient(140deg,
+                  #ffe8a8 0%, #f5d680 18%, #e8c060 35%,
+                  #d4a040 52%, #c49020 68%, #a88020 82%, #8b6914 100%)`,
                 boxShadow: `
-                  0 4px 16px rgba(0,0,0,0.45),
-                  0 0 30px rgba(255,215,0,0.4),
-                  inset 0 2px 4px rgba(255,255,255,0.55),
-                  inset 0 -2px 4px rgba(0,0,0,0.2)
+                  inset 4px 4px 12px rgba(255,255,255,0.4),
+                  inset -3px -3px 8px rgba(0,0,0,0.15),
+                  0 4px 14px rgba(0,0,0,0.3)
                 `,
+                transform: "rotate(-18deg)",
               }}
-            />
-            {/* Knot specular */}
+            >
+              <div className="absolute inset-0 rounded-[inherit]" style={{
+                background: "radial-gradient(ellipse 55% 45% at 32% 25%, rgba(255,255,255,0.5), transparent 60%)",
+              }} />
+            </div>
+
+            {/* Right satin loop — mirror */}
             <div
-              className="absolute rounded-[inherit]"
+              className="absolute"
               style={{
-                top: "8%",
-                left: "15%",
-                width: "45%",
-                height: "38%",
-                borderRadius: "50%",
-                background: "radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.8), rgba(255,255,255,0.15) 55%, transparent 80%)",
+                left: "38%",
+                top: "5%",
+                width: "72%",
+                height: "68%",
+                borderRadius: "48% 50% 50% 42% / 70% 52% 48% 30%",
+                background: `linear-gradient(220deg,
+                  #ffe8a8 0%, #f5d680 18%, #e8c060 35%,
+                  #d4a040 52%, #c49020 68%, #a88020 82%, #8b6914 100%)`,
+                boxShadow: `
+                  inset -4px 4px 12px rgba(255,255,255,0.4),
+                  inset 3px -3px 8px rgba(0,0,0,0.15),
+                  0 4px 14px rgba(0,0,0,0.3)
+                `,
+                transform: "rotate(18deg)",
               }}
-            />
-            {/* Knot secondary highlight */}
-            <div
-              className="absolute rounded-full"
-              style={{
-                bottom: "12%",
-                right: "12%",
-                width: "20%",
-                height: "16%",
-                background: "radial-gradient(circle, rgba(255,255,255,0.25), transparent 70%)",
-              }}
-            />
-            {/* Subtle fold lines for realism */}
-            <div
-              className="absolute left-[30%] top-[45%] w-[40%] h-px rotate-[-8deg]"
-              style={{ background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent)" }}
-            />
-            <div
-              className="absolute left-[25%] top-[60%] w-[50%] h-px rotate-[5deg]"
-              style={{ background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent)" }}
-            />
+            >
+              <div className="absolute inset-0 rounded-[inherit]" style={{
+                background: "radial-gradient(ellipse 55% 45% at 68% 25%, rgba(255,255,255,0.5), transparent 60%)",
+              }} />
+            </div>
+
+            {/* Left ribbon tail */}
+            <div className="absolute" style={{
+              left: "16%",
+              bottom: "-32%",
+              width: "13%",
+              height: "58%",
+              background: `linear-gradient(90deg, #8b6914, #c49020 30%, #e8b84c 50%, #c49020 70%, #a88020)`,
+              borderRadius: "2px 2px 30% 60%",
+              transform: "rotate(-28deg)",
+              boxShadow: "2px 3px 8px rgba(0,0,0,0.3)",
+            }} />
+
+            {/* Right ribbon tail */}
+            <div className="absolute" style={{
+              right: "16%",
+              bottom: "-32%",
+              width: "13%",
+              height: "58%",
+              background: `linear-gradient(90deg, #a88020, #c49020 30%, #e8b84c 50%, #c49020 70%, #8b6914)`,
+              borderRadius: "2px 2px 60% 30%",
+              transform: "rotate(28deg)",
+              boxShadow: "-2px 3px 8px rgba(0,0,0,0.3)",
+            }} />
+
+            {/* Center knot */}
+            <div className="absolute left-1/2 -translate-x-1/2 z-10" style={{
+              top: "22%", width: "30%", height: "50%",
+            }}>
+              <div className="absolute inset-0" style={{
+                borderRadius: "38% 38% 42% 42%",
+                background: `radial-gradient(circle at 36% 28%,
+                  #fff8e0 0%, #ffe4a0 12%, #f5d680 28%, #e8c060 42%,
+                  #d4a040 58%, #a88020 78%, #8b6914 100%)`,
+                boxShadow: `
+                  0 3px 12px rgba(0,0,0,0.4),
+                  0 0 20px rgba(255,215,0,0.3),
+                  inset 0 2px 3px rgba(255,255,255,0.5)
+                `,
+              }} />
+              <div className="absolute rounded-full" style={{
+                top: "10%", left: "16%", width: "42%", height: "34%",
+                background: "radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.75), transparent 75%)",
+              }} />
+              {/* Fold line */}
+              <div className="absolute left-[28%] top-[48%] w-[44%] h-px rotate-[-8deg]" style={{
+                background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent)",
+              }} />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Orbiting sparkles during glow phase */}
-      <OrbitingSparkles active={phase === "glow" || isOpening} />
+        {/* Orbiting sparkles */}
+        <OrbitingSparkles active={phase === "glow" || isOpening} />
+      </div>
     </div>
   );
 }
@@ -787,7 +637,8 @@ export default function BirthdayPage() {
         }
         @keyframes screen-flash {
           0% { opacity: 0; }
-          25% { opacity: 1; }
+          20% { opacity: 1; }
+          50% { opacity: 0.6; }
           100% { opacity: 0; }
         }
         @keyframes spotlight-breathe {
@@ -806,6 +657,11 @@ export default function BirthdayPage() {
           0% { text-shadow: none; }
           50% { text-shadow: 0 0 30px rgba(232,180,76,0.4), 0 0 60px rgba(232,180,76,0.1); }
           100% { text-shadow: none; }
+        }
+        @keyframes golden-pulse {
+          0% { transform: scale(0.1); opacity: 0.9; }
+          60% { opacity: 0.5; }
+          100% { transform: scale(1); opacity: 0; }
         }
         @keyframes star-rotate {
           from { transform: rotate(0deg); }
@@ -862,6 +718,23 @@ export default function BirthdayPage() {
 
         {/* Floating gold dust — ambient magic */}
         <GoldDust count={phase === "open" || phase === "burst" ? 90 : 50} boost={phase === "glow" || phase === "open"} />
+
+        {/* Golden burst pulse — expanding golden light masks the box disappearance */}
+        {(phase === "burst" || phase === "reveal") && (
+          <div
+            className="absolute inset-0 pointer-events-none flex items-center justify-center"
+          >
+            <div
+              style={{
+                width: "200vmax",
+                height: "200vmax",
+                borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(255,250,220,0.6), rgba(255,215,0,0.2) 25%, transparent 50%)",
+                animation: "golden-pulse 2s ease-out forwards",
+              }}
+            />
+          </div>
+        )}
 
         {/* The Gift — centered, floating, majestic */}
         <div
